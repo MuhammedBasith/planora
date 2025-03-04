@@ -140,7 +140,7 @@ const InputSection: React.FC<InputSectionProps> = ({
             <div className="flex flex-col sm:flex-row items-center gap-2">
               {!isButtonClicked && (
                 <span
-                  className="text-xs border border-primary/20 rounded px-1.5 py-0.5 inline-flex items-center text-muted-foreground"
+                  className="text-xs border border-primary/20 rounded px-1.5 py-0.5 hidden sm:inline-flex items-center text-muted-foreground"
                 >
                   {navigator.platform.toLowerCase().includes("mac") ? "⌘" : "Ctrl"}{" "}
                   + Enter
