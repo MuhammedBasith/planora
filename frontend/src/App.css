@@ -1,0 +1,57 @@
+
+#root {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0;
+  text-align: center;
+}
+
+/* Remove fixed heights and set responsive parameters */
+@media (max-width: 640px) {
+  .glass {
+    backdrop-filter: blur(8px);
+  }
+  
+  h1 {
+    font-size: 1.75rem;
+  }
+  
+  p {
+    font-size: 0.875rem;
+  }
+}
+
+/* iOS-style toggle animation */
+.toggle-checkbox:checked {
+  right: 0;
+  border-color: #68D391;
+}
+
+.toggle-checkbox:checked + .toggle-label {
+  background-color: #68D391;
+}
+
+/* Add some responsive helper classes */
+.responsive-container {
+  width: 100%;
+  padding: 0 1rem;
+  margin: 0 auto;
+}
+
+@media (min-width: 640px) {
+  .responsive-container {
+    padding: 0 1.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .responsive-container {
+    padding: 0 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .responsive-container {
+    padding: 0 2.5rem;
+  }
+}
