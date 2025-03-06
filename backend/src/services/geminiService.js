@@ -81,6 +81,8 @@ export const generateSchedule = async (text) => {
     const result = await model.generateContent(prompt);
     const response = await result.response;
     let responseText = response.text().trim();
+    console.log(responseText);
+    
     
     // Clean up the response if it contains any markdown or extra text
     if (responseText.includes('```')) {
