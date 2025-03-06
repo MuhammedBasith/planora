@@ -12,6 +12,43 @@ if (!GEMINI_API_KEY) {
 
 const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
 
+
+const schema = {
+  description: "A schedule represented as a JSON array of events",
+  type: SchemaType.ARRAY,
+  items: {
+    type: SchemaType.OBJECT,
+    properties: {
+      title: {
+        type: SchemaType.STRING,
+        description: "Brief descriptive name (max 50 chars)",
+        maxLength: 50,
+        nullable: false,
+      },
+      startTime: {
+        type: SchemaType.STRING,
+        description: "Start time in 24-hour format (HH:mm)",
+        pattern: "^([01]\\d|2[0-3]):[0-5]\\d$", // Ensures valid HH:mm format
+        nullable: false,
+      },
+      duration: {
+        type: SchemaType.INTEGER,
+        description: "Duration in minutes (minimum 0)",
+        minimum: 0,
+        nullable: false,
+      },
+      type: {
+        type: SchemaType.STRING,
+        description: "Event type",
+        enum: ["exercise", "work", "meeting", "meal", "leisure"], // Restricts values
+        nullable: false,
+      },
+    },
+    required: ["title", "startTime", "duration", "type"],
+  },
+};
+
+
 const PROMPT_TEMPLATE = `You are a JSON schedule generator. Your task is to convert the input text into a schedule.
 ONLY respond with a valid JSON array. DO NOT include any other text, markdown formatting, or explanations.
 Each event in the array must follow this exact structure:
@@ -34,7 +71,10 @@ Remember:
 
 export const generateSchedule = async (text) => {
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash", generationConfig: {
+      responseMimeType: "application/json",
+      responseSchema: schema,
+    }, });
     
     const prompt = PROMPT_TEMPLATE.replace('{text}', text);
     
