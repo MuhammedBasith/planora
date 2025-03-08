@@ -6,6 +6,8 @@ export interface ScheduleEvent {
   endTime: string;
   duration: number;
   type: 'exercise' | 'work' | 'meeting' | 'meal' | 'leisure' | string;
+  location?: string;
+  notes?: string;
 }
 
 export const generateSchedule = async (text: string): Promise<ScheduleEvent[]> => {

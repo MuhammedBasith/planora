@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Mic, Loader2 } from "lucide-react";
+import { Mic } from "lucide-react";
 
 interface InputSectionProps {
   onSubmit: (text: string) => void;
@@ -95,10 +95,7 @@ const InputSection: React.FC<InputSectionProps> = ({
   }, [handleKeyDown, inputText, isProcessing]);
 
   return (
-    <div
-      className="w-full max-w-3xl mx-auto px-3 md:px-4 animate-fade-in relative"
-      style={{ animationDelay: "0.1s" }}
-    >
+    <div className="w-full max-w-3xl mx-auto px-3 md:px-4 animate-in fade-in duration-500 slide-in-from-bottom-4">
       <div className="glass rounded-xl md:rounded-2xl p-4 md:p-6 relative overflow-hidden border-2 border-primary/20 shadow-lg shadow-primary/5">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/10 pointer-events-none" />
 
@@ -139,9 +136,7 @@ const InputSection: React.FC<InputSectionProps> = ({
           <div className="flex flex-col sm:flex-row gap-2 items-center">
             <div className="flex flex-col sm:flex-row items-center gap-2">
               {!isButtonClicked && (
-                <span
-                  className="text-xs border border-primary/20 rounded px-1.5 py-0.5 hidden sm:inline-flex items-center text-muted-foreground"
-                >
+                <span className="text-xs border border-primary/20 rounded px-1.5 py-0.5 hidden sm:inline-flex items-center text-muted-foreground">
                   {navigator.platform.toLowerCase().includes("mac") ? "⌘" : "Ctrl"}{" "}
                   + Enter
                 </span>
@@ -158,7 +153,6 @@ const InputSection: React.FC<InputSectionProps> = ({
               >
                 {isProcessing ? (
                   <div className="flex items-center gap-2">
-                    <Loader2 className="h-4 w-4 animate-spin" />
                     <span className="relative">
                       Processing
                       <span className="absolute -right-4 animate-bounce-ellipsis">.</span>

@@ -6,7 +6,7 @@ import { format } from 'date-fns';
 import { CalendarIcon, Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import EventCard from './EventCard';
-import { ScheduleEvent } from '@/utils/nlpProcessor';
+import type { ScheduleEvent } from '@/utils/api';
 import { generateICSFile } from '@/utils/calendarGenerator';
 import { toast } from 'sonner';
 
@@ -109,37 +109,38 @@ const ScheduleDisplay: React.FC<ScheduleDisplayProps> = ({ events, onEventsChang
   };
 
   const addToGoogleCalendar = () => {
-    // Generate Google Calendar URLs for each event
-    events.forEach(event => {
+    if (events.length === 0) {
+      toast.error("No events to add.");
+      return;
+    }
+  
+    const baseUrl = "https://calendar.google.com/calendar/u/0/r/eventedit";
+  
+    events.forEach((event) => {
       const eventDate = new Date(selectedDate);
-      const startTimeParts = event.startTime.split(':');
-      const endTimeParts = event.endTime.split(':');
-      
+      const startTimeParts = event.startTime.split(":");
+      const endTimeParts = event.endTime.split(":");
+  
       eventDate.setHours(parseInt(startTimeParts[0]), parseInt(startTimeParts[1]));
       const startDateTime = format(eventDate, "yyyyMMdd'T'HHmmss");
-      
+  
       eventDate.setHours(parseInt(endTimeParts[0]), parseInt(endTimeParts[1]));
       const endDateTime = format(eventDate, "yyyyMMdd'T'HHmmss");
-      
-      // Create URL for this specific event
-      let eventUrl = 'https://calendar.google.com/calendar/render?action=TEMPLATE';
-      eventUrl += `&text=${encodeURIComponent(event.title)}`;
-      eventUrl += `&dates=${startDateTime}/${endDateTime}`;
-      
-      if (event.location) {
-        eventUrl += `&location=${encodeURIComponent(event.location)}`;
-      }
-      
-      if (event.notes) {
-        eventUrl += `&details=${encodeURIComponent(event.notes)}`;
-      }
-      
-      // Open in a new tab
-      window.open(eventUrl, '_blank');
+  
+      const eventUrl =
+        `${baseUrl}?text=${encodeURIComponent(event.title)}` +
+        `&dates=${startDateTime}/${endDateTime}` +
+        (event.location ? `&location=${encodeURIComponent(event.location)}` : "") +
+        (event.notes ? `&details=${encodeURIComponent(event.notes)}` : "");
+  
+      // Open each event in a new tab
+      window.open(eventUrl, "_blank");
     });
-    
-    toast.success(`Opening ${events.length} event${events.length > 1 ? 's' : ''} in Google Calendar...`);
+  
+    toast.success(`Added ${events.length} event${events.length > 1 ? "s" : ""} to Google Calendar!`);
   };
+  
+  
 
   return (
     <div className="w-full max-w-3xl mx-auto px-3 md:px-4 py-4 md:py-6 animate-fade-in" style={{ animationDelay: '0.2s' }}>
@@ -207,15 +208,6 @@ const ScheduleDisplay: React.FC<ScheduleDisplayProps> = ({ events, onEventsChang
             className="flex-1 shadow-md shadow-primary/20 text-sm"
           >
             Download Calendar (.ics)
-          </Button>
-          
-          <Button
-            onClick={addToGoogleCalendar}
-            disabled={events.length === 0}
-            variant="outline"
-            className="flex-1 bg-white/50 dark:bg-black/20 border-2 border-primary/20 input-focus text-sm"
-          >
-            Add to Google Calendar
           </Button>
           
           <Button
