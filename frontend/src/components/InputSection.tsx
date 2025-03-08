@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Mic } from "lucide-react";
+import { Mic, Loader2 } from "lucide-react";
 
 interface InputSectionProps {
   onSubmit: (text: string) => void;
@@ -152,34 +152,25 @@ const InputSection: React.FC<InputSectionProps> = ({
                 disabled={!inputText.trim() || isProcessing}
                 className={`w-full sm:w-auto px-2 md:px-4 py-2 rounded-lg md:rounded-xl transition-all duration-300 ${
                   !inputText.trim() || isProcessing
-                    ? "bg-gray-400"
+                    ? "bg-primary/80"
                     : "bg-primary hover:bg-primary/90"
-                } shadow-md shadow-primary/20 flex items-center gap-2`}
+                } shadow-md shadow-primary/20 flex items-center gap-2 relative overflow-hidden`}
               >
                 {isProcessing ? (
-                  <>
-                    <span className="animate-pulse-soft">Processing</span>
-                    <span
-                      className="animate-pulse-soft"
-                      style={{ animationDelay: "0.2s" }}
-                    >
-                      .
+                  <div className="flex items-center gap-2">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <span className="relative">
+                      Processing
+                      <span className="absolute -right-4 animate-bounce-ellipsis">.</span>
+                      <span className="absolute -right-7 animate-bounce-ellipsis" style={{ animationDelay: "0.2s" }}>.</span>
+                      <span className="absolute -right-10 animate-bounce-ellipsis" style={{ animationDelay: "0.4s" }}>.</span>
                     </span>
-                    <span
-                      className="animate-pulse-soft"
-                      style={{ animationDelay: "0.4s" }}
-                    >
-                      .
-                    </span>
-                    <span
-                      className="animate-pulse-soft"
-                      style={{ animationDelay: "0.6s" }}
-                    >
-                      .
-                    </span>
-                  </>
+                  </div>
                 ) : (
-                  <>Generate Schedule</>
+                  <span>Generate Schedule</span>
+                )}
+                {isProcessing && (
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-shimmer" />
                 )}
               </Button>
             </div>

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Header from "@/components/Header";
 import InputSection from "@/components/InputSection";
 import ScheduleDisplay from "@/components/ScheduleDisplay";
+import ScheduleSkeleton from "@/components/ScheduleSkeleton";
 import { generateSchedule } from "@/utils/api";
 import type { ScheduleEvent } from "@/utils/api";
 import { toast } from "sonner";
@@ -15,18 +16,19 @@ const Index = () => {
   const handleSubmit = async (text: string) => {
     try {
       setIsProcessing(true);
+      setShowSchedule(true); // Show skeleton immediately
 
       // Process the natural language input using the backend API
       const extractedEvents = await generateSchedule(text);
       
       setEvents(extractedEvents);
-      setShowSchedule(true);
 
       // Show success toast
       toast.success("Schedule generated successfully!");
     } catch (error) {
       console.error("Error processing input:", error);
       toast.error(error instanceof Error ? error.message : "Error generating schedule. Please try again.");
+      setShowSchedule(false); // Hide skeleton on error
     } finally {
       setIsProcessing(false);
     }
@@ -51,6 +53,8 @@ const Index = () => {
                   onSubmit={handleSubmit}
                   isProcessing={isProcessing}
                 />
+              ) : isProcessing ? (
+                <ScheduleSkeleton />
               ) : (
                 <ScheduleDisplay
                   events={events}

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
@@ -110,10 +109,7 @@ const ScheduleDisplay: React.FC<ScheduleDisplayProps> = ({ events, onEventsChang
   };
 
   const addToGoogleCalendar = () => {
-    // Generate Google Calendar URL
-    const baseUrl = 'https://calendar.google.com/calendar/render?action=TEMPLATE';
-    let finalUrl = baseUrl;
-    
+    // Generate Google Calendar URLs for each event
     events.forEach(event => {
       const eventDate = new Date(selectedDate);
       const startTimeParts = event.startTime.split(':');
@@ -125,23 +121,24 @@ const ScheduleDisplay: React.FC<ScheduleDisplayProps> = ({ events, onEventsChang
       eventDate.setHours(parseInt(endTimeParts[0]), parseInt(endTimeParts[1]));
       const endDateTime = format(eventDate, "yyyyMMdd'T'HHmmss");
       
-      finalUrl = `${baseUrl}&text=${encodeURIComponent(event.title)}`;
+      // Create URL for this specific event
+      let eventUrl = 'https://calendar.google.com/calendar/render?action=TEMPLATE';
+      eventUrl += `&text=${encodeURIComponent(event.title)}`;
+      eventUrl += `&dates=${startDateTime}/${endDateTime}`;
       
       if (event.location) {
-        finalUrl += `&location=${encodeURIComponent(event.location)}`;
+        eventUrl += `&location=${encodeURIComponent(event.location)}`;
       }
       
       if (event.notes) {
-        finalUrl += `&details=${encodeURIComponent(event.notes)}`;
+        eventUrl += `&details=${encodeURIComponent(event.notes)}`;
       }
       
-      finalUrl += `&dates=${startDateTime}/${endDateTime}`;
-      
       // Open in a new tab
-      window.open(finalUrl, '_blank');
+      window.open(eventUrl, '_blank');
     });
     
-    toast.success("Opening Google Calendar...");
+    toast.success(`Opening ${events.length} event${events.length > 1 ? 's' : ''} in Google Calendar...`);
   };
 
   return (

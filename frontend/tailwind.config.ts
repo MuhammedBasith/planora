@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -105,6 +104,10 @@ export default {
 				'pulse-soft': {
 					'0%, 100%': { opacity: '1' },
 					'50%': { opacity: '0.7' }
+				},
+				shimmer: {
+					'0%': { transform: 'translateX(-100%)' },
+					'100%': { transform: 'translateX(100%)' }
 				}
 			},
 			animation: {
@@ -115,7 +118,9 @@ export default {
 				'scale-in': 'scale-in 0.2s ease-out',
 				'scale-out': 'scale-out 0.2s ease-out',
 				'slide-in': 'slide-in 0.3s ease-out',
-				'pulse-soft': 'pulse-soft 2s infinite ease-in-out'
+				'pulse-soft': 'pulse-soft 2s infinite ease-in-out',
+				'bounce-ellipsis': 'bounce 1s infinite',
+				'shimmer': 'shimmer 2s linear infinite'
 			}
 		}
 	},
