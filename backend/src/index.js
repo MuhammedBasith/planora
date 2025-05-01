@@ -24,6 +24,10 @@ app.use(limiter);
 // Routes
 app.use('/api', scheduleRoutes);
 
+app.get((req, res) => {
+  res.json({"success": true})
+})
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
