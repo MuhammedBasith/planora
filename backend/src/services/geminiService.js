@@ -139,6 +139,18 @@ export const generateSchedule = async (text) => {
     }
   } catch (error) {
     console.error('Gemini API error:', error);
+    // Detect Gemini model overload (rate limit or quota exceeded)
+    if (
+      error.message &&
+      (error.message.includes('quota') ||
+        error.message.includes('overloaded') ||
+        error.message.includes('rate limit') ||
+        error.message.includes('429'))
+    ) {
+      const overloadError = new Error('GEMINI_MODEL_OVERLOADED');
+      overloadError.code = 'GEMINI_MODEL_OVERLOADED';
+      throw overloadError;
+    }
     throw new Error(error.message || 'Failed to generate schedule with AI');
   }
-}; 
+};

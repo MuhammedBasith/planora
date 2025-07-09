@@ -22,6 +22,12 @@ export const generateSchedule = async (text: string): Promise<ScheduleEvent[]> =
 
     if (!response.ok) {
       const error = await response.json();
+      // Check for Gemini overload error from backend
+      if (error.error === 'GEMINI_MODEL_OVERLOADED') {
+        const overloadError = new Error('GEMINI_MODEL_OVERLOADED');
+        overloadError.name = 'GEMINI_MODEL_OVERLOADED';
+        throw overloadError;
+      }
       throw new Error(error.message || 'Failed to generate schedule');
     }
 
@@ -45,4 +51,4 @@ export const generateSchedule = async (text: string): Promise<ScheduleEvent[]> =
     console.error('API Error:', error);
     throw error;
   }
-}; 
+};

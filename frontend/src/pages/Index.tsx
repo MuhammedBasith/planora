@@ -23,7 +23,11 @@ const Index = () => {
       toast.success("Schedule generated successfully!");
     } catch (error) {
       console.error("Error processing input:", error);
-      toast.error(error instanceof Error ? error.message : "Error generating schedule. Please try again.");
+      if (error instanceof Error && (error.name === 'GEMINI_MODEL_OVERLOADED' || error.message === 'GEMINI_MODEL_OVERLOADED')) {
+        toast.info("The AI model is currently overloaded. This is not your fault—please try again in a few moments.");
+      } else {
+        toast.error(error instanceof Error ? error.message : "Error generating schedule. Please try again.");
+      }
       setShowSchedule(false);
     } finally {
       setIsProcessing(false);
